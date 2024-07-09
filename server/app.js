@@ -5,6 +5,12 @@ import { config } from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 
+// Routes
+import userRoutes from "./routes/userRoute.js";
+
+// Custom error handling middleware
+import errorMiddleware from "./middleware/errorMiddleware.js";
+
 const app = express();
 
 // Middlewares
@@ -30,5 +36,9 @@ app.get("/", (req, res) => {
 app.all("*", (_req, res) => {
   res.status(404).send("OOPS!!! 404 Page Not Found");
 });
+
+app.use("/api/v1/user", userRoutes);
+
+app.use(errorMiddleware);
 
 export default app;
