@@ -1,5 +1,8 @@
 import User from "../models/userModel.js";
 import asyncHandler from "../middleware/asyncHandlerMiddleware.js";
+import cloudinary from "cloudinary";
+import fs from "fs";
+import AppError from "../utils/appError.js";
 
 const cookieOptions = {
   /*  
@@ -57,7 +60,32 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     );
   }
 
-  //TODO: File upload
+  // Run only if user sends a file
+  if (req.file) {
+    try {
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "LMS", // Save files in a folder named lms
+        width: 250,
+        height: 250,
+        gravity: "faces", // This option tells cloudinary to center the image around detected faces (if any) after cropping or resizing the original image
+        crop: "fill",
+      });
+
+      // If success
+      if (result) {
+        // Set the public_id and secure_url in DB
+        user.avatar.public_id = result.public_id;
+        user.avatar.secure_url = result.secure_url;
+
+        // After successful upload remove the file from local storage
+        fs.unlinkSync(`uploads/${req.file.filename}`);
+      }
+    } catch (error) {
+      return next(
+        new AppError(error || "File not uploaded, please try again", 400)
+      );
+    }
+  }
 
   // Save the user object
   await user.save();

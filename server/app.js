@@ -32,12 +32,12 @@ app.get("/", (req, res) => {
   res.json({ ok: "Server is OK" });
 });
 
+app.use("/api/v1/user", userRoutes);
+
 // Default catch all route - 404
 app.all("*", (_req, res) => {
   res.status(404).send("OOPS!!! 404 Page Not Found");
 });
-
-app.use("/api/v1/user", userRoutes);
 
 app.use(errorMiddleware);
 
