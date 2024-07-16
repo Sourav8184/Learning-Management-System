@@ -7,6 +7,7 @@ import morgan from "morgan";
 
 // Routes
 import userRoutes from "./routes/userRoute.js";
+import courseRoutes from "./routes/courseRoute.js";
 
 // Custom error handling middleware
 import errorMiddleware from "./middleware/errorMiddleware.js";
@@ -33,6 +34,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/courses", courseRoutes);
 
 // Default catch all route - 404
 app.all("*", (_req, res) => {
