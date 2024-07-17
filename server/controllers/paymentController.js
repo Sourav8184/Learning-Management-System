@@ -2,7 +2,22 @@ import asyncHandler from "../middleware/asyncHandlerMiddleware.js";
 import AppError from "../utils/appError.js";
 import User from "../models/userModel.js";
 import Payment from "../models/paymentModel.js";
+import { razorpay } from "../server.js";
 import crypto from "crypto";
+
+/**
+ * @GET_RAZORPAY_ID
+ * @ROUTE @POST {{URL}}/api/v1/payments/razorpay-key
+ * @ACCESS Public
+ */
+
+export const getRazorpayApiKey = asyncHandler(async (_req, res, _next) => {
+  res.status(200).json({
+    success: true,
+    message: "Razorpay API key",
+    key: process.env.RAZORPAY_KEY_ID,
+  });
+});
 
 /**
  * @ACTIVATE_SUBSCRIPTION
@@ -171,20 +186,6 @@ export const cancelSubscription = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Subscription canceled successfully",
-  });
-});
-
-/**
- * @GET_RAZORPAY_ID
- * @ROUTE @POST {{URL}}/api/v1/payments/razorpay-key
- * @ACCESS Public
- */
-
-export const getRazorpayApiKey = asyncHandler(async (_req, res, _next) => {
-  res.status(200).json({
-    success: true,
-    message: "Razorpay API key",
-    key: process.env.RAZORPAY_KEY_ID,
   });
 });
 
